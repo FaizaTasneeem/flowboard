@@ -1,4 +1,6 @@
 import axios from "axios";
+import { Card } from "../types";
+
 const columnsPath = `http://localhost:4000/columns`;
 const cardsPath = `http://localhost:4000/cards`;
 
@@ -9,5 +11,10 @@ export async function fetchColumns() {
 
 export async function fetchCards() {
     const { data } = await axios.get(cardsPath);
+    return data;
+}
+
+export async function addCard(card: Card) {
+    const { data } = await axios.post(cardsPath, card);
     return data;
 }
