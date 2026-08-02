@@ -1,19 +1,15 @@
 import { useState } from "react"
 import { Column, Card } from "../types"
 import AddCard from "./AddCard";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCard } from "../api/axios";
+import EditAndDelete from "./EditAndDelete";
+import AddCardForm from "./AddCardForm";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
-    const queryClient = useQueryClient();
     const [showAddCardForm, setShowAddCardForm] = useState(false);
-    const [showCardDeleteBtn, setShowCardDeleteBtn] = useState("");
-    const [newCardOrder] = useState(cardData.filter(card => card.columnId === column.id).length + 1);
-
-    const { mutateAsync } = useMutation({
-        mutationFn: deleteCard,
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cards'] })
-    })
+    const [showCardEditAndDeleteBtn, setShowCardEditAndDeleteBtn] = useState("");
+    const [showEditForm, setShowEditForm] = useState("");
+    const [newCardOrder] = useState(cardData.filter(card => card.columnId === column.id).length);
 
     return (
         <div className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
@@ -33,30 +29,40 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                 <div className="p-2 flex flex-col gap-2 text-[#E2E8F0]">
                     {cardData
                         .filter(card => card.columnId === column.id)
-                        .map(card =>
-                            <div key={card.id} className="p-2 flex justify-between items-start bg-[#1E1B36] border border-[#252140] rounded-lg text-[#E2E8F0] cursor-pointer " onMouseEnter={() => setShowCardDeleteBtn(card.id)} onMouseLeave={() => setShowCardDeleteBtn("")}>
-                                <div className="flex gap-2 ">
-                                    <div
-                                        className={`py-1 px-2 font-bold text-xs rounded-lg border border-[#231F3B] bg-opacity-0 uppercase 
-                                            ${card.label === 'bug'
-                                                ? 'bg-[#2D1322] text-[#FF4D6D]'
-                                                : card.label === 'feat'
-                                                    ? 'bg-[#0E2B26] text-[#2DD4BF]'
-                                                    : card.label === 'docs'
-                                                        ? 'bg-[#102340] text-[#60A5FA]'
-                                                        : ''
-                                            }`}
-                                    >
-                                        {card.label}
+                        .map((card, idx) =>
+                            <div key={card.id} className="flex flex-col">
+
+                                {showEditForm !== card.id &&
+                                    <div className="p-2 flex justify-between items-start bg-[#18182C] hover:bg-[#1F1D35] border border-[#2A2A45] hover:border-[#3D3760] rounded-lg text-[#E2E8F0] " onMouseEnter={() => setShowCardEditAndDeleteBtn(card.id)} onMouseLeave={() => setShowCardEditAndDeleteBtn("")}>
+                                        <div className="flex gap-2 items-start  min-w-0 flex-1">
+                                            <div
+                                                className={`py-1 px-2 font-bold text-[10px] rounded-sm border border-[#231F3B] bg-opacity-0 uppercase 
+                                                ${card.label === 'bug'
+                                                        ? 'bg-[#2D1322] text-[#FF4D6D]'
+                                                        : card.label === 'feat'
+                                                            ? 'bg-[#0E2B26] text-[#2DD4BF]'
+                                                            : card.label === 'docs'
+                                                                ? 'bg-[#102340] text-[#60A5FA]'
+                                                                : ''
+                                                    }`}
+                                            >
+                                                {card.label}
+                                            </div>
+                                            <div className="w-2/3 text-sm rounded-lg break-words overflow-hidden">{card.title}</div>
+                                        </div>
+                                        <EditAndDelete showCardEditAndDeleteBtn={showCardEditAndDeleteBtn} setShowEditForm={setShowEditForm} card={card} />
                                     </div>
-                                    <div className="font-small text-sm rounded-lg">{card.title}</div>
-                                </div>
-                                <button
-                                    className={`cursor-pointer text-gray-400 ${showCardDeleteBtn === card.id ? 'opacity-100' : 'opacity-0'}`}
-                                    onClick={() => { console.log(card.id); mutateAsync(card.id) }}
-                                >
-                                    x
-                                </button>
+                                }
+
+                                {showEditForm === card.id &&
+                                    <AddCard
+                                        setShowAddCardForm={() => setShowEditForm("")}
+                                        column={column}
+                                        card={card}
+                                        cardOrder={idx}
+                                    />
+                                }
+
                             </div>
                         )
                     }
@@ -70,7 +76,20 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                         </button>
                     }
 
-                    {showAddCardForm && <AddCard setShowAddCardForm={setShowAddCardForm} column={column} newCardOrder={newCardOrder} />}
+                    {showAddCardForm &&
+                        <AddCard
+                            setShowAddCardForm={setShowAddCardForm}
+                            column={column}
+                            card={{
+                                id: "",
+                                columnId: "",
+                                title: "",
+                                label: "",
+                                order: -1
+                            }}
+                            cardOrder={newCardOrder + 1}
+                        />
+                    }
                 </div>
             </div>
         </div >

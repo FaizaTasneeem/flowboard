@@ -11,6 +11,6 @@ export type Card = {
     id: string,
     columnId: string,
     title: string,
-    label: LabelType,
+    label: string,
     order: number,
 }

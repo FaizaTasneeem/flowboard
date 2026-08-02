@@ -19,8 +19,12 @@ export async function addCard(card: Card) {
     return data;
 }
 
+export async function editCard({ id, card }: { id: string, card: Card }) {
+    const { data } = await axios.put(`${cardsPath}/${id}`, card)
+    return data;
+}
+
 export async function deleteCard(id: string) {
     const { data } = await axios.delete(`${cardsPath}/${id}`)
     return data;
 }
-
