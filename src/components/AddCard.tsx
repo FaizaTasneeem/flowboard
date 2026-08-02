@@ -25,7 +25,7 @@ function AddCard({ setShowAddCardForm, column, newCardOrder }: { setShowAddCardF
         event.preventDefault();
         const formData: any = new FormData(event.currentTarget);
         let newCard = (Object as any).fromEntries(formData);
-        newCard = { ...newCard, columnId: column.id, id: `card-${newCardOrder}`, order: newCardOrder }
+        newCard = { ...newCard, columnId: column.id, order: newCardOrder }
 
         console.log(newCard);
         mutateAsync(newCard);

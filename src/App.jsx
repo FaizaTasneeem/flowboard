@@ -20,7 +20,7 @@ function App() {
       <Header />
       <div className="w-full py-4 px-10 flex gap-4">
         {columnData?.map(column => (
-          <div key={column.id} className='w-full'>
+          <div key={column.id} className='w-1/4'>
             <Column column={column} cardData={cardData} />
           </div>
 

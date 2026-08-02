@@ -1,11 +1,19 @@
 import { useState } from "react"
 import { Column, Card } from "../types"
 import AddCard from "./AddCard";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCard } from "../api/axios";
 
 function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
+    const queryClient = useQueryClient();
     const [showAddCardForm, setShowAddCardForm] = useState(false);
     const [showCardDeleteBtn, setShowCardDeleteBtn] = useState("");
-    const [totalCards] = useState(cardData.filter(card => card.columnId === column.id).length + 1);
+    const [newCardOrder] = useState(cardData.filter(card => card.columnId === column.id).length + 1);
+
+    const { mutateAsync } = useMutation({
+        mutationFn: deleteCard,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cards'] })
+    })
 
     return (
         <div className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
@@ -26,7 +34,7 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                     {cardData
                         .filter(card => card.columnId === column.id)
                         .map(card =>
-                            <div className="p-2 flex justify-between items-start bg-[#1E1B36] border border-[#252140] rounded-lg text-[#E2E8F0] cursor-pointer " onMouseEnter={() => setShowCardDeleteBtn(card.id)} onMouseLeave={() => setShowCardDeleteBtn("")}>
+                            <div key={card.id} className="p-2 flex justify-between items-start bg-[#1E1B36] border border-[#252140] rounded-lg text-[#E2E8F0] cursor-pointer " onMouseEnter={() => setShowCardDeleteBtn(card.id)} onMouseLeave={() => setShowCardDeleteBtn("")}>
                                 <div className="flex gap-2 ">
                                     <div
                                         className={`py-1 px-2 font-bold text-xs rounded-lg border border-[#231F3B] bg-opacity-0 uppercase 
@@ -43,7 +51,12 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                                     </div>
                                     <div className="font-small text-sm rounded-lg">{card.title}</div>
                                 </div>
-                                {showCardDeleteBtn === card.id && <button className="text-gray-400">x</button>}
+                                <button
+                                    className={`cursor-pointer text-gray-400 ${showCardDeleteBtn === card.id ? 'opacity-100' : 'opacity-0'}`}
+                                    onClick={() => { console.log(card.id); mutateAsync(card.id) }}
+                                >
+                                    x
+                                </button>
                             </div>
                         )
                     }
@@ -57,10 +70,10 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                         </button>
                     }
 
-                    {showAddCardForm && <AddCard setShowAddCardForm={setShowAddCardForm} column={column} newCardOrder={totalCards} />}
+                    {showAddCardForm && <AddCard setShowAddCardForm={setShowAddCardForm} column={column} newCardOrder={newCardOrder} />}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
