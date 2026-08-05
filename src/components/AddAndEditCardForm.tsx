@@ -21,15 +21,15 @@ function AddAndEditCardForm({ formValues, handleSubmit, handleFormChange, setSho
             </textarea>
             <div className="flex font-bold text-xs text-[#6E6894] gap-2">
                 <label htmlFor="bug" className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-2xl bg-[#2D1322] text-[#FF4D6D]" >
-                    <input type="radio" id="bug" name="label" value="bug" onPointerDown={(e) => e.stopPropagation()} onChange={handleFormChange} hidden />
+                    <input type="radio" id="bug" name="label" value={formValues.label || "bug"} onPointerDown={(e) => e.stopPropagation()} onChange={handleFormChange} hidden />
                     BUG
                 </label>
                 <label htmlFor="feat" className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-2xl bg-[#0E2B26] text-[#2DD4BF]" >
-                    <input type="radio" id="feat" name="label" value="feat" onPointerDown={(e) => e.stopPropagation()} onChange={handleFormChange} hidden />
+                    <input type="radio" id="feat" name="label" value={formValues.label || "feat"} onPointerDown={(e) => e.stopPropagation()} onChange={handleFormChange} hidden />
                     FEAT
                 </label>
                 <label htmlFor="docs" className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-2xl bg-[#102340] text-[#60A5FA]" >
-                    <input type="radio" id="docs" name="label" value="docs" onPointerDown={(e) => e.stopPropagation()} onChange={handleFormChange} hidden />
+                    <input type="radio" id="docs" name="label" value={formValues.label || "docs"} onPointerDown={(e) => e.stopPropagation()} onChange={handleFormChange} hidden />
                     DOCS
                 </label>
             </div>

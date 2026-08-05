@@ -14,6 +14,8 @@ function Board() {
         queryKey: ['cards'],
         queryFn: fetchCards
     })
+
+
     return (
         <div className="w-full min-h-screen flex flex-col bg-[#0B0A13]">
             <Header />

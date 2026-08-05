@@ -1,15 +1,16 @@
 import { useState } from "react"
-import { Column, Card } from "../types"
-import AddAndEditCard from "./AddAndEditCard";
+import { useDroppable } from '@dnd-kit/core';
 import CardComponent from "./CardComponent";
+import AddAndEditCard from "./AddAndEditCard";
+import { Column, Card } from "../types"
 
 function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[] }) {
     const [showAddCardForm, setShowAddCardForm] = useState(false);
-    const [newCardOrder] = useState(cardData?.filter(card => card.columnId === column.id).length);
+    const { setNodeRef } = useDroppable({ id: column.id });
 
 
     return (
-        <div className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
+        <div ref={setNodeRef} className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
             <div className="flex flex-col">
                 <span className="p-2 flex justify-between items-center font-bold text-sm text-white">
                     <div className="flex gap-2 items-center">
@@ -29,11 +30,10 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
 
                 <div className="p-2 flex flex-col gap-2 text-[#E2E8F0]">
                     {cardData?.filter(card => card.columnId === column.id)
-                        .slice()
                         .sort((a, b) => a.order - b.order)
                         .map((card, idx) =>
                             <div key={card.id}>
-                                <CardComponent card={card} column={column} idx={idx} />
+                                <CardComponent card={card} column={column} idx={idx + 1} />
                             </div>
                         )
                     }
@@ -58,7 +58,7 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
                                 label: "",
                                 order: -1
                             }}
-                            cardOrder={newCardOrder + 1}
+                            cardOrder={cardData?.filter(card => card.columnId === column.id).length + 1}
                         />
                     }
                 </div>

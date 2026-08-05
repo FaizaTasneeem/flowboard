@@ -20,7 +20,7 @@ export async function addCard(card: Card) {
 }
 
 export async function editCard({ id, card }: { id: string, card: Card }) {
-    const { data } = await axios.put(`${cardsPath}/${id}`, card)
+    const { data } = await axios.patch(`${cardsPath}/${id}`, card)
     return data;
 }
 

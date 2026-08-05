@@ -32,9 +32,9 @@ function AddAndEditCard({ setShowAddCardForm, column, card, cardOrder }: { setSh
     }
     async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
-        const formData: any = new FormData(event.currentTarget);
-        let newCard = (Object as any).fromEntries(formData);
-        newCard = { ...newCard, columnId: column.id, order: cardOrder }
+        // const formData: any = new FormData(event.currentTarget);
+        // let newCard = (Object as any).fromEntries(formData);
+        let newCard = { ...formValues, columnId: column.id, order: cardOrder }
 
         console.log(newCard);
         card.id !== "" ? edit({ id: card.id, card: newCard }) : add(newCard);
