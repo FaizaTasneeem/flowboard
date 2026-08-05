@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useDroppable } from '@dnd-kit/core';
+import { SortableContext } from "@dnd-kit/sortable";
 import CardComponent from "./CardComponent";
 import AddAndEditCard from "./AddAndEditCard";
 import { Column, Card } from "../types"
@@ -8,6 +9,7 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
     const [showAddCardForm, setShowAddCardForm] = useState(false);
     const { setNodeRef } = useDroppable({ id: column.id });
 
+    const sortedCards = cardData?.filter(card => card.columnId === column.id).sort((a, b) => a.order - b.order);
 
     return (
         <div ref={setNodeRef} className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
@@ -29,14 +31,13 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
                 <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
 
                 <div className="p-2 flex flex-col gap-2 text-[#E2E8F0]">
-                    {cardData?.filter(card => card.columnId === column.id)
-                        .sort((a, b) => a.order - b.order)
-                        .map((card, idx) =>
+                    <SortableContext items={sortedCards}>
+                        {sortedCards?.map((card, idx) =>
                             <div key={card.id}>
                                 <CardComponent card={card} column={column} idx={idx + 1} />
                             </div>
-                        )
-                    }
+                        )}
+                    </SortableContext>
 
                     {!showAddCardForm &&
                         <button

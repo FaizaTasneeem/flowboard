@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { useDraggable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import EditAndDeleteBtn from "./EditAndDeleteBtn";
 import AddAndEditCard from "./AddAndEditCard";
 import { Card, Column } from "../types";
@@ -7,12 +8,17 @@ import { Card, Column } from "../types";
 function CardComponent({ card, column, idx }: { card: Card, column: Column, idx: number }) {
     const [showCardEditAndDeleteBtn, setShowCardEditAndDeleteBtn] = useState("");
     const [showEditForm, setShowEditForm] = useState("");
-    const { attributes, listeners, setNodeRef } = useDraggable({ id: card.id });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: card.id });
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
 
     return (
         <div
             className="flex flex-col"
             ref={setNodeRef}
+            style={style}
             {...attributes}
             {...listeners}
         >
