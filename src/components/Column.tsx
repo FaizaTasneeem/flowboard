@@ -1,28 +1,30 @@
 import { useState } from "react"
 import { Column, Card } from "../types"
-import AddCard from "./AddCard";
-import EditAndDelete from "./EditAndDelete";
-import AddCardForm from "./AddCardForm";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import AddAndEditCard from "./AddAndEditCard";
+import EditAndDeleteBtn from "./EditAndDeleteBtn";
 
 function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
     const [showAddCardForm, setShowAddCardForm] = useState(false);
     const [showCardEditAndDeleteBtn, setShowCardEditAndDeleteBtn] = useState("");
     const [showEditForm, setShowEditForm] = useState("");
-    const [newCardOrder] = useState(cardData.filter(card => card.columnId === column.id).length);
+    const [newCardOrder] = useState(cardData?.filter(card => card.columnId === column.id).length);
 
     return (
         <div className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
             <div className="flex flex-col">
-                <span className="p-2 flex gap-2 items-center font-bold text-sm text-white">
-                    <div
-                        style={{
-                            backgroundColor: `${column.color}`,
-                            boxShadow: `0 0 8px ${column.color}`
-                        }}
-                        className="w-2 h-2 rounded-full shadow-2xl">
+                <span className="p-2 flex justify-between items-center font-bold text-sm text-white">
+                    <div className="flex gap-2 items-center">
+                        <div
+                            style={{
+                                backgroundColor: `${column.color}`,
+                                boxShadow: `0 0 8px ${column.color}`
+                            }}
+                            className="w-2 h-2 rounded-full shadow-2xl">
+                        </div>
+                        {column.title}
                     </div>
-                    {column.title}
+                    <span className="p-3 w-2.5 h-2.5 rounded-full text-xs font-normal flex justify-center items-center bg-[#18182C]">{cardData?.filter(card => card.columnId === column.id).length}</span>
+
                 </span>
                 <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
 
@@ -50,12 +52,12 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                                             </div>
                                             <div className="w-2/3 text-sm rounded-lg break-words overflow-hidden">{card.title}</div>
                                         </div>
-                                        <EditAndDelete showCardEditAndDeleteBtn={showCardEditAndDeleteBtn} setShowEditForm={setShowEditForm} card={card} />
+                                        <EditAndDeleteBtn showCardEditAndDeleteBtn={showCardEditAndDeleteBtn} setShowEditForm={setShowEditForm} card={card} />
                                     </div>
                                 }
 
                                 {showEditForm === card.id &&
-                                    <AddCard
+                                    <AddAndEditCard
                                         setShowAddCardForm={() => setShowEditForm("")}
                                         column={column}
                                         card={card}
@@ -77,7 +79,7 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                     }
 
                     {showAddCardForm &&
-                        <AddCard
+                        <AddAndEditCard
                             setShowAddCardForm={setShowAddCardForm}
                             column={column}
                             card={{
