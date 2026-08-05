@@ -17,12 +17,15 @@ function Board() {
         <div className="w-full min-h-screen flex flex-col bg-[#0B0A13]">
             <Header />
             <div className="w-full py-4 px-10 flex gap-4">
-                {columnData?.map((column: Column) => (
-                    <div key={column.id} className='w-1/4'>
-                        <Column column={column} cardData={cardData} />
-                    </div>
+                {columnData?.slice()
+                    .sort((a: Column, b: Column) => a.order - b.order)
+                    .map((column: Column) => (
+                        <div key={column.id} className='w-1/4'>
+                            <Column column={column} cardData={cardData} />
+                        </div>
 
-                ))}
+                    ))
+                }
             </div>
         </div>
     )

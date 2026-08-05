@@ -31,6 +31,8 @@ function Column({ column, cardData }: { column: Column, cardData: Card[] }) {
                 <div className="p-2 flex flex-col gap-2 text-[#E2E8F0]">
                     {cardData
                         .filter(card => card.columnId === column.id)
+                        .slice()
+                        .sort((a, b) => a.order - b.order)
                         .map((card, idx) =>
                             <div key={card.id} className="flex flex-col">
 
