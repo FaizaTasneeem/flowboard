@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchCards, fetchColumns } from '../api/axios'
 import Header from './Header'
-import Column from './Column';
+import ColumnComponent from './ColumnComponent';
+import { Column } from '../types';
 
 function Board() {
     const { data: columnData } = useQuery({
@@ -21,7 +22,7 @@ function Board() {
                     .sort((a: Column, b: Column) => a.order - b.order)
                     .map((column: Column) => (
                         <div key={column.id} className='w-1/4'>
-                            <Column column={column} cardData={cardData} />
+                            <ColumnComponent column={column} cardData={cardData} />
                         </div>
 
                     ))

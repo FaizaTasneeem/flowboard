@@ -28,7 +28,6 @@ function AddAndEditCard({ setShowAddCardForm, column, card, cardOrder }: { setSh
     function handleFormChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const name = event.target.name;
         const value = event.target.value;
-        console.log(value);
         setFormValues({ ...formValues, [name]: value });
     }
     async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
@@ -44,15 +43,12 @@ function AddAndEditCard({ setShowAddCardForm, column, card, cardOrder }: { setSh
 
 
     return (
-        <div>
-            <AddAndEditCardForm
-                formValues={formValues}
-                handleSubmit={handleSubmit}
-                handleFormChange={handleFormChange}
-                setShowAddCardForm={setShowAddCardForm}
-            />
-        </div>
-
+        <AddAndEditCardForm
+            formValues={formValues}
+            handleSubmit={handleSubmit}
+            handleFormChange={handleFormChange}
+            setShowAddCardForm={setShowAddCardForm}
+        />
     )
 }
 

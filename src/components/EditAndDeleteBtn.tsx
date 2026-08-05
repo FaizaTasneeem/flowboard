@@ -16,12 +16,14 @@ function EditAndDeleteBtn({ showCardEditAndDeleteBtn, setShowEditForm, card }: {
     <div className="flex gap-1">
       <button
         className={`cursor-pointer text-gray-400 ${showCardEditAndDeleteBtn === card.id ? 'opacity-100' : 'opacity-0'}`}
+        onPointerDown={(e) => e.stopPropagation()}
         onClick={() => setShowEditForm(card.id)}
       >
         <Pencil size={10} />
       </button>
       <button
         className={`cursor-pointer text-gray-400 ${showCardEditAndDeleteBtn === card.id ? 'opacity-100' : 'opacity-0'}`}
+        onPointerDown={(e) => e.stopPropagation()}
         onClick={() => del(card.id)}
       >
         <X size={12} />
