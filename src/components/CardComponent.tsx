@@ -8,7 +8,7 @@ import { Card, Column } from "../types";
 function CardComponent({ card, column, idx }: { card: Card, column: Column, idx: number }) {
     const [showCardEditAndDeleteBtn, setShowCardEditAndDeleteBtn] = useState("");
     const [showEditForm, setShowEditForm] = useState("");
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: card.id });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: card.id, data: card });
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
