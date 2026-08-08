@@ -28,14 +28,8 @@ function Board() {
     const getCardPos = (id: UniqueIdentifier) => cardDataDummy.findIndex((card: Card) => card.id === id);
 
     const getOverColumnLastIdx = (overId: UniqueIdentifier) => {
-        const overColumnIdxList = cardDataDummy.map((card: Card, idx: number) => {
-            if (card.columnId === overId) return idx;
-            return -1;
-        });
-        const reversedOverColumnIdxList = overColumnIdxList.toReversed();
-        const overColumnLastIdx = reversedOverColumnIdxList.find((idx: number) => idx !== -1);
-        return overColumnLastIdx + 1;
-
+        const overColumnIdxList = cardDataDummy.findLastIndex((card: Card) => card.columnId === overId);
+        return overColumnIdxList + 1;
     }
 
     function swapCol(cardDataDummy: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {

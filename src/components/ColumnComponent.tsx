@@ -27,7 +27,6 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
                         {column.title}
                     </div>
                     <span className="p-3 w-2.5 h-2.5 rounded-full text-xs font-normal flex justify-center items-center bg-[#18182C]">{cardData.length}</span>
-
                 </span>
                 <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
 
