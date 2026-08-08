@@ -12,7 +12,6 @@ function Board() {
         queryKey: ['columns'],
         queryFn: fetchColumns
     })
-
     const { data: cardData } = useQuery({
         queryKey: ['cards'],
         queryFn: fetchCards
@@ -25,41 +24,50 @@ function Board() {
         }
     }, [cardData]);
 
-    const getCardPos = (id: UniqueIdentifier | undefined) => cardDataDummy.findIndex((card: Card) => card.id === id);
 
-    function swapOrder(cardDataDummy: Card[], activeId: UniqueIdentifier, overId: UniqueIdentifier | undefined) {
-        const activeCurrentOrder = cardDataDummy.find((card: Card) => card.id === activeId)?.order;
-        const overCurrentOrder = cardDataDummy.find((card: Card) => card.id === overId)?.order;
+    const getCardPos = (id: UniqueIdentifier) => cardDataDummy.findIndex((card: Card) => card.id === id);
 
-        console.log("activeCurrentOrder ", activeCurrentOrder)
-        console.log("overCurrentOrder ", overCurrentOrder)
+    const getOverColumnLastIdx = (overId: UniqueIdentifier) => {
+        const overColumnIdxList = cardDataDummy.map((card: Card, idx: number) => {
+            if (card.columnId === overId) return idx;
+            return -1;
+        });
+        const reversedOverColumnIdxList = overColumnIdxList.toReversed();
+        const overColumnLastIdx = reversedOverColumnIdxList.find((idx: number) => idx !== -1);
+        return overColumnLastIdx + 1;
 
-        const newCardData = cardDataDummy.map((card: Card) => {
-            if (card.id === activeId) return { ...card, order: overCurrentOrder };
-            if (card.id === overId) return { ...card, order: activeCurrentOrder };
+    }
+
+    function swapCol(cardDataDummy: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {
+        return cardDataDummy.map((card: Card) => {
+            if (card.id === activeCardId) return { ...card, columnId: overColId.toString() };
             return card;
         })
-
-        return newCardData;
     }
 
     function handleDragEnd(event: DragEndEvent) {
-        console.log(event)
         const { active, over } = event;
+        let newCardData: Card[] = cardDataDummy;
 
-        if (over) {
-            console.log(`Dropped ${active.id} over ${over.id}`);
-        }
+        if (!over || active.id === over?.id) return;
+        console.log(`Dropped ${active.id} over ${over.id}`);
 
-        if (active.id === over?.id) return;
+        let activeCardPos = getCardPos(active.id);
+        let overCardPos = getCardPos(over.id);
 
-        setCardDataDummy((cardDataDummy: Card[]) => {
-            const originalPos = getCardPos(active.id);
-            const newPos = getCardPos(over?.id);
-            const newCardData = swapOrder(cardDataDummy, active.id, over?.id);
-            return arrayMove(newCardData, originalPos, newPos);
+        //updating column of active (draggable) card
+        newCardData = overCardPos === -1
+            ? swapCol(cardDataDummy, active.id, over.id)    //over.id => column id
+            : swapCol(cardDataDummy, active.id, cardDataDummy[overCardPos].columnId);    //over.id => card id
+
+        if (overCardPos === -1) overCardPos = getOverColumnLastIdx(over.id);
+
+        console.log("activeCardPos ", activeCardPos);
+        console.log("overCardPos ", overCardPos);
+
+        setCardDataDummy(() => {
+            return arrayMove(newCardData, activeCardPos, overCardPos);
         })
-
 
     }
 
@@ -79,12 +87,11 @@ function Board() {
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
                             <div key={column.id} className='w-1/4'>
-                                <ColumnComponent column={column} cardData={cardDataDummy} />
+                                <ColumnComponent column={column} cardData={cardDataDummy?.filter((card: Card) => card.columnId === column.id)} />
                             </div>
                         ))
                     }
                 </div>
-
             </DndContext>
         </div>
     )

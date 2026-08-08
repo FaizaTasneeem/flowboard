@@ -9,8 +9,8 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
     const [showAddCardForm, setShowAddCardForm] = useState(false);
     const { setNodeRef } = useDroppable({ id: column.id });
 
-    const sortedCards = cardData?.filter(card => card.columnId === column.id).sort((a, b) => a.order - b.order);
-    // const sortedCards = cardData?.filter(card => card.columnId === column.id);
+    // const sortedCards = cardData.sort((a, b) => a.order - b.order);
+    const sortedCards = cardData;
 
     return (
         <div ref={setNodeRef} className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
@@ -26,7 +26,7 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
                         </div>
                         {column.title}
                     </div>
-                    <span className="p-3 w-2.5 h-2.5 rounded-full text-xs font-normal flex justify-center items-center bg-[#18182C]">{cardData?.filter(card => card.columnId === column.id).length}</span>
+                    <span className="p-3 w-2.5 h-2.5 rounded-full text-xs font-normal flex justify-center items-center bg-[#18182C]">{cardData.length}</span>
 
                 </span>
                 <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
@@ -58,7 +58,7 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
                                 label: "",
                                 order: -1
                             }}
-                            cardOrder={cardData?.filter(card => card.columnId === column.id).length + 1}
+                            cardOrder={cardData.length + 1}
                         />
                     }
                 </div>
