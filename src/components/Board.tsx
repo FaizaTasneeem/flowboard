@@ -1,12 +1,12 @@
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query'
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
+import { DndContext, DragStartEvent, DragEndEvent, DragOverlay, UniqueIdentifier, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { fetchCards, fetchColumns } from '../api/axios'
 import Header from './Header'
 import ColumnComponent from './ColumnComponent';
-import { Card, Column } from '../types';
-import { useState, useEffect } from 'react';
-import { arrayMove } from '@dnd-kit/sortable';
 import CardElem from './CardElem';
+import { Card, Column } from '../types';
 
 function Board() {
     const { data: columnData } = useQuery({
@@ -17,6 +17,12 @@ function Board() {
         queryKey: ['cards'],
         queryFn: fetchCards
     })
+
+    const sensors = useSensors(
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates
+        })
+    );
 
     const [activeCard, setActiveCard] = useState<Card | null>(null);
     const [cardDataDummy, setCardDataDummy] = useState(cardData ?? []);
@@ -43,11 +49,8 @@ function Board() {
 
     function handleDragStart(event: DragStartEvent) {
         const { active } = event;
-
         if (active.id) console.log(`Started dragging ${active.id}`);
-
         if (active.data.current) setActiveCard(active.data.current as Card);
-
     }
 
     function handleDragEnd(event: DragEndEvent) {
@@ -82,6 +85,7 @@ function Board() {
             <Header />
 
             <DndContext
+                sensors={sensors}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
