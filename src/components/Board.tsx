@@ -1,44 +1,57 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query'
-import { DndContext, DragStartEvent, DragEndEvent, DragOverlay, UniqueIdentifier, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { DndContext, DragStartEvent, DragEndEvent, DragOverlay, UniqueIdentifier, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { fetchCards, fetchColumns } from '../api/axios'
+import { editCard, fetchCards, fetchColumns } from '../api/axios'
 import Header from './Header'
 import ColumnComponent from './ColumnComponent';
 import CardElem from './CardElem';
 import { Card, Column } from '../types';
 
 function Board() {
+    const queryClient = useQueryClient();
+
     const { data: columnData } = useQuery({
         queryKey: ['columns'],
         queryFn: fetchColumns
-    })
+    });
     const { data: cardData } = useQuery({
         queryKey: ['cards'],
         queryFn: fetchCards
+    });
+    const { mutateAsync } = useMutation({
+        mutationFn: updateCardList,
+        onMutate: async (cardList: Card[]) => {
+            await queryClient.cancelQueries({ queryKey: ['cards'] });
+            const previous: Card[] | undefined = queryClient.getQueryData(['cards']);
+            queryClient.setQueryData(['cards'], cardList);
+            return { previous };
+        },
+        onError: (_err, _var, context) => queryClient.setQueryData(['cards'], context?.previous),
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['cards'] })
     })
 
     const sensors = useSensors(
+        useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates
         })
     );
 
     const [activeCard, setActiveCard] = useState<Card | null>(null);
-    const [cardDataDummy, setCardDataDummy] = useState(cardData ?? []);
-    useEffect(() => {
-        if (cardData) {
-            setCardDataDummy(cardData);
-        }
-    }, [cardData]);
 
 
-    const getCardPos = (id: UniqueIdentifier) => cardDataDummy.findIndex((card: Card) => card.id === id);
+    async function updateCardList(updatedList: Card[]) {
+        const newListRequests = updatedList.map(card => editCard({ id: card.id, card }));
+        return Promise.all(newListRequests);
+    }
 
-    const getOverColumnLastIdx = (overId: UniqueIdentifier) => cardDataDummy.findLastIndex((card: Card) => card.columnId === overId) + 1;
+    const getCardPos = (id: UniqueIdentifier) => cardData.findIndex((card: Card) => card.id === id);
 
-    function swapCol(cardDataDummy: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {
-        return cardDataDummy.map((card: Card) => {
+    const getOverColumnLastIdx = (overId: UniqueIdentifier) => cardData.findLastIndex((card: Card) => card.columnId === overId) + 1;
+
+    function swapCol(cardData: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {
+        return cardData.map((card: Card) => {
             if (card.id === activeCardId) return { ...card, columnId: overColId.toString() };
             return card;
         })
@@ -52,7 +65,7 @@ function Board() {
 
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
-        let newCardData: Card[] = cardDataDummy;
+        let newCardData: Card[] = cardData;
 
         if (!over || active.id === over?.id) return;
         console.log(`Dropped ${active.id} over ${over.id}`);
@@ -62,18 +75,16 @@ function Board() {
 
         //updating column of active (draggable) card
         newCardData = overCardPos === -1
-            ? swapCol(cardDataDummy, active.id, over.id)    //over.id => column id
-            : swapCol(cardDataDummy, active.id, cardDataDummy[overCardPos].columnId);    //over.id => card id
+            ? swapCol(cardData, active.id, over.id)    //over.id => column id
+            : swapCol(cardData, active.id, cardData[overCardPos].columnId);    //over.id => card id
 
         if (overCardPos === -1) overCardPos = getOverColumnLastIdx(over.id);
 
         console.log("activeCardPos ", activeCardPos);
         console.log("overCardPos ", overCardPos);
 
-        setCardDataDummy(() => {
-            return arrayMove(newCardData, activeCardPos, overCardPos);
-        })
-
+        const updatedList = arrayMove(newCardData, activeCardPos, overCardPos);
+        mutateAsync(updatedList);
     }
 
 
@@ -87,11 +98,11 @@ function Board() {
                 onDragEnd={handleDragEnd}
             >
                 <div className="w-full py-4 px-10 flex gap-4">
-                    {cardDataDummy && columnData?.slice()
+                    {cardData && columnData?.slice()
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
                             <div key={column.id} className='w-1/4'>
-                                <ColumnComponent column={column} cardData={cardDataDummy?.filter((card: Card) => card.columnId === column.id)} />
+                                <ColumnComponent column={column} cardData={cardData?.filter((card: Card) => card.columnId === column.id)} />
                             </div>
                         ))
                     }
