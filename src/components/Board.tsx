@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import { DndContext, DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { fetchCards, fetchColumns } from '../api/axios'
 import Header from './Header'
 import ColumnComponent from './ColumnComponent';
 import { Card, Column } from '../types';
 import { useState, useEffect } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
+import CardElem from './CardElem';
 
 function Board() {
     const { data: columnData } = useQuery({
@@ -17,6 +18,7 @@ function Board() {
         queryFn: fetchCards
     })
 
+    const [activeCard, setActiveCard] = useState<Card | null>(null);
     const [cardDataDummy, setCardDataDummy] = useState(cardData ?? []);
     useEffect(() => {
         if (cardData) {
@@ -37,6 +39,15 @@ function Board() {
             if (card.id === activeCardId) return { ...card, columnId: overColId.toString() };
             return card;
         })
+    }
+
+    function handleDragStart(event: DragStartEvent) {
+        const { active } = event;
+
+        if (active.id) console.log(`Started dragging ${active.id}`);
+
+        if (active.data.current) setActiveCard(active.data.current as Card);
+
     }
 
     function handleDragEnd(event: DragEndEvent) {
@@ -71,9 +82,7 @@ function Board() {
             <Header />
 
             <DndContext
-                onDragStart={({ active }) => {
-                    console.log(`Started dragging ${active.id}`);
-                }}
+                onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
                 <div className="w-full py-4 px-10 flex gap-4">
@@ -86,6 +95,14 @@ function Board() {
                         ))
                     }
                 </div>
+
+                <DragOverlay>
+                    {activeCard &&
+                        <div className='p-2 bg-[#18182C] border border-[#2A2A45] rounded-lg text-[#E2E8F0] cursor-grab'>
+                            <CardElem card={activeCard} />
+                        </div>
+                    }
+                </DragOverlay>
             </DndContext>
         </div>
     )

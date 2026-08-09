@@ -9,8 +9,6 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
     const [showAddCardForm, setShowAddCardForm] = useState(false);
     const { setNodeRef } = useDroppable({ id: column.id });
 
-    // const sortedCards = cardData.sort((a, b) => a.order - b.order);
-    const sortedCards = cardData;
 
     return (
         <div ref={setNodeRef} className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
@@ -31,8 +29,8 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
                 <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
 
                 <div className="p-2 flex flex-col gap-2 text-[#E2E8F0]">
-                    <SortableContext items={sortedCards}>
-                        {sortedCards?.map((card, idx) =>
+                    <SortableContext items={cardData}>
+                        {cardData?.map((card, idx) =>
                             <CardComponent key={card.id} card={card} column={column} idx={idx + 1} />
                         )}
                     </SortableContext>
