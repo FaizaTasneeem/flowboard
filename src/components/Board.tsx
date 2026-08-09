@@ -83,8 +83,11 @@ function Board() {
         console.log("activeCardPos ", activeCardPos);
         console.log("overCardPos ", overCardPos);
 
-        const updatedList = arrayMove(newCardData, activeCardPos, overCardPos);
+        const updatedList = arrayMove(newCardData, activeCardPos, overCardPos).map(
+            (card, index) => ({ ...card, order: index + 1 })
+        );
         mutateAsync(updatedList);
+        setActiveCard(null);
     }
 
 
@@ -108,7 +111,7 @@ function Board() {
                     }
                 </div>
 
-                <DragOverlay>
+                <DragOverlay dropAnimation={null}>
                     {activeCard &&
                         <div className='p-2 bg-[#18182C] border border-[#2A2A45] rounded-lg text-[#E2E8F0] cursor-grab'>
                             <CardElem card={activeCard} />
