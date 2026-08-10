@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { addCard, editCard } from "../api/axios"
-import { Card, Column } from "../types";
-import AddAndEditCardForm from "./AddAndEditCardForm";
+import { addCard, editCard } from "../../api/axios"
+import { Card, Column } from "../../types";
+import AddAndEditCardForm from "../forms/AddAndEditCardForm";
 
 function AddAndEditCard({ setShowAddCardForm, column, card, cardOrder }: { setShowAddCardForm: (show: boolean) => void, column: Column, card: Card, cardOrder: number }) {
     const queryClient = useQueryClient();

@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import EditAndDeleteBtn from "./EditAndDeleteBtn";
+import EditAndDeleteBtn from "../ui/EditAndDeleteBtn";
 import AddAndEditCard from "./AddAndEditCard";
-import { Card, Column } from "../types";
+import { Card, Column } from "../../types";
 import CardElem from "./CardView";
 
 function CardComponent({ card, column, idx }: { card: Card, column: Column, idx: number }) {

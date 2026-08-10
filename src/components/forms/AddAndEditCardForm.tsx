@@ -1,4 +1,4 @@
-import { Card } from "../types"
+import { Card } from "../../types"
 
 function AddAndEditCardForm({ formValues, handleSubmit, handleFormChange, setShowAddCardForm }: {
     formValues: Card,

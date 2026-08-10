@@ -1,4 +1,4 @@
-import { Card } from "../types"
+import { Card } from "../../types"
 
 function CardView({ card }: { card: Card }) {
     return (

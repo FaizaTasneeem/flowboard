@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DndContext, DragStartEvent, DragEndEvent, DragOverlay, UniqueIdentifier, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { editCard, fetchCards, fetchColumns } from '../api/axios'
-import Header from './Header'
+import { editCard, fetchCards, fetchColumns } from '../../api/axios'
+import Header from '../ui/Header'
 import ColumnComponent from './ColumnComponent';
 import CardElem from './CardView';
-import { Card, Column } from '../types';
+import { Card, Column } from '../../types';
 
 function Board() {
     const queryClient = useQueryClient();

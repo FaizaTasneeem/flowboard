@@ -3,7 +3,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext } from "@dnd-kit/sortable";
 import CardComponent from "./CardComponent";
 import AddAndEditCard from "./AddAndEditCard";
-import { Column, Card } from "../types"
+import { Column, Card } from "../../types"
 
 function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[] }) {
     const [showAddCardForm, setShowAddCardForm] = useState(false);

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil, X } from "lucide-react";
-import { deleteCard } from "../api/axios";
-import { Card } from "../types"
+import { deleteCard } from "../../api/axios";
+import { Card } from "../../types"
 
 
 function EditAndDeleteBtn({ showCardEditAndDeleteBtn, setShowEditForm, card }: { showCardEditAndDeleteBtn: string, setShowEditForm: (show: string) => void, card: Card }) {
