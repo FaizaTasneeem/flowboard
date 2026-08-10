@@ -1,6 +1,8 @@
+import { useSearchParams } from "react-router-dom"
 import Logo from "./Logo"
 
 function Header() {
+    const [searchParams, setSearchParams] = useSearchParams();
     return (
         <div className="w-[75%] flex flex-col">
             <div className="flex p-4 px-10 gap-8">
