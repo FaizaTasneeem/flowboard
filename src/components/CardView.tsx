@@ -1,6 +1,6 @@
 import { Card } from "../types"
 
-function CardElem({ card }: { card: Card }) {
+function CardView({ card }: { card: Card }) {
     return (
         <div className="flex gap-2 items-start  min-w-0 flex-1">
             <div
@@ -21,4 +21,4 @@ function CardElem({ card }: { card: Card }) {
     )
 }
 
-export default CardElem
+export default CardView

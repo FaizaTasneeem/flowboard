@@ -4,7 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import EditAndDeleteBtn from "./EditAndDeleteBtn";
 import AddAndEditCard from "./AddAndEditCard";
 import { Card, Column } from "../types";
-import CardElem from "./CardElem";
+import CardElem from "./CardView";
 
 function CardComponent({ card, column, idx }: { card: Card, column: Column, idx: number }) {
     const [showCardEditAndDeleteBtn, setShowCardEditAndDeleteBtn] = useState("");

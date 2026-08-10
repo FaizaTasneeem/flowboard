@@ -5,7 +5,7 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { editCard, fetchCards, fetchColumns } from '../api/axios'
 import Header from './Header'
 import ColumnComponent from './ColumnComponent';
-import CardElem from './CardElem';
+import CardElem from './CardView';
 import { Card, Column } from '../types';
 
 function Board() {
