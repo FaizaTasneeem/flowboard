@@ -1,8 +1,24 @@
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom"
+import { useCards } from "../../hooks/useBoardQueries";
 import Logo from "./Logo"
 
 function Header() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const query = searchParams.get('q') || "";
+
+    const [searchInput, setSearchInput] = useState(query);
+
+    const { data: cardsList } = useCards();
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSearchParams({ q: searchInput });
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchInput]);
+
     return (
         <div className="w-[75%] flex flex-col">
             <div className="flex p-4 px-10 gap-8">
@@ -11,6 +27,8 @@ function Header() {
 
                 <input
                     type="text"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                     className="w-2/3 p-2 border border-[#231F3B] rounded-lg bg-[#141223] font-normal text-sm placeholder-[#5D577D] focus:outline focus:outline-purple-800"
                     placeholder="🔍 Filter cards..."
                 />

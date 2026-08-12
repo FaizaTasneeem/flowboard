@@ -1,35 +1,16 @@
 import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DndContext, DragStartEvent, DragEndEvent, DragOverlay, UniqueIdentifier, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { editCard, fetchCards, fetchColumns } from '../../api/axios'
+import { useCards, useColumns, useUpdateCardList } from '../../hooks/useBoardQueries';
 import Header from '../ui/Header'
 import ColumnComponent from './ColumnComponent';
 import CardElem from './CardView';
 import { Card, Column } from '../../types';
 
 function Board() {
-    const queryClient = useQueryClient();
-
-    const { data: columnData } = useQuery({
-        queryKey: ['columns'],
-        queryFn: fetchColumns
-    });
-    const { data: cardData } = useQuery({
-        queryKey: ['cards'],
-        queryFn: fetchCards
-    });
-    const { mutateAsync } = useMutation({
-        mutationFn: updateCardList,
-        onMutate: async (cardList: Card[]) => {
-            await queryClient.cancelQueries({ queryKey: ['cards'] });
-            const previous: Card[] | undefined = queryClient.getQueryData(['cards']);
-            queryClient.setQueryData(['cards'], cardList);
-            return { previous };
-        },
-        onError: (_err, _var, context) => queryClient.setQueryData(['cards'], context?.previous),
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['cards'] })
-    })
+    const { data: columnData } = useColumns();
+    const { data: cardData } = useCards();
+    const { mutateAsync } = useUpdateCardList();
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -40,11 +21,6 @@ function Board() {
 
     const [activeCard, setActiveCard] = useState<Card | null>(null);
 
-
-    async function updateCardList(updatedList: Card[]) {
-        const newListRequests = updatedList.map(card => editCard({ id: card.id, card }));
-        return Promise.all(newListRequests);
-    }
 
     const getCardPos = (id: UniqueIdentifier) => cardData.findIndex((card: Card) => card.id === id);
 
@@ -59,7 +35,7 @@ function Board() {
 
     function handleDragStart(event: DragStartEvent) {
         const { active } = event;
-        if (active.id) console.log(`Started dragging ${active.data.current?.order}`);
+        if (active) console.log(`Started dragging ${active.data.current?.order}`);
         if (active.data.current) setActiveCard(active.data.current as Card);
     }
 

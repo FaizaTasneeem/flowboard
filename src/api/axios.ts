@@ -28,3 +28,8 @@ export async function deleteCard(id: string) {
     const { data } = await axios.delete(`${cardsPath}/${id}`)
     return data;
 }
+
+export async function updateCardList(updatedList: Card[]) {
+    const newListRequests = updatedList.map(card => editCard({ id: card.id, card }));
+    return Promise.all(newListRequests);
+}
