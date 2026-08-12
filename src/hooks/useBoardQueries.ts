@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchColumns, fetchCards, updateCardList } from '../api/axios';
-import { Card } from '../types';
+import { Card, cardsParamsType } from '../types';
 
 
 export const useColumns = () => {
@@ -10,10 +10,10 @@ export const useColumns = () => {
     });
 };
 
-export const useCards = () => {
+export const useCards = (title?: string, label?: string) => {
     return useQuery({
-        queryKey: ['cards'],
-        queryFn: fetchCards
+        queryKey: ['cards', title, label],
+        queryFn: () => fetchCards({ title, label })
     });
 };
 

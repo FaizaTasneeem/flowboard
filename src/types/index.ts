@@ -14,3 +14,8 @@ export type Card = {
     label: string,
     order: number,
 }
+
+export type cardsParamsType = {
+    title: string | undefined,
+    label: string | undefined
+}

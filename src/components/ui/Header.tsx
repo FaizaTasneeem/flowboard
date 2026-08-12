@@ -2,22 +2,30 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom"
 import { useCards } from "../../hooks/useBoardQueries";
 import Logo from "./Logo"
+import { Card } from "../../types";
 
-function Header() {
+function Header({ setCardData }: { setCardData: (param: Card[]) => void }) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const query = searchParams.get('q') || "";
+    const queryTitle = searchParams.get('q') || "";
+    const queryLabel = searchParams.get('q') || "";
 
-    const [searchInput, setSearchInput] = useState(query);
+    const [title, setTitle] = useState(queryTitle);
+    const [label, setLabel] = useState(queryLabel);
 
-    const { data: cardsList } = useCards();
+
+    const { data: cardsList } = useCards(title, label);
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setSearchParams({ q: searchInput });
+            setSearchParams({ title, label });
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [searchInput]);
+    }, [title, label]);
+
+    useEffect(() => {
+        if (cardsList?.length !== 0) setCardData(cardsList);
+    }, [cardsList]);
 
     return (
         <div className="w-[75%] flex flex-col">
@@ -27,17 +35,48 @@ function Header() {
 
                 <input
                     type="text"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="w-2/3 p-2 border border-[#231F3B] rounded-lg bg-[#141223] font-normal text-sm placeholder-[#5D577D] focus:outline focus:outline-purple-800"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-2/3 p-2 border border-[#231F3B] rounded-lg bg-[#141223] font-normal text-sm placeholder-[#5D577D] focus:outline focus:outline-purple-800 text-[#6E6894]"
                     placeholder="🔍 Filter cards..."
                 />
 
                 <div className="w-1/3 flex font-bold text-xs text-[#6E6894] gap-2">
-                    <button className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-lg">BUG</button>
-                    <button className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-lg">FEAT</button>
-                    <button className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-lg">DOCS</button>
+                    <label htmlFor="bug" onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "bug" ? 'border-red-300' : 'border-[#231F3B]'} rounded-lg `} >
+                        <input
+                            type="radio"
+                            id="bug"
+                            name="label"
+                            value={"bug"}
+                            onChange={(e) => setLabel(e.target.value)}
+                            hidden
+                        />
+                        BUG
+                    </label>
+                    <label htmlFor="feat" onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "feat" ? 'border-green-300' : 'border-[#231F3B]'} rounded-lg `} >
+                        <input
+                            type="radio"
+                            id="feat"
+                            name="label"
+                            value={"feat"}
+                            onChange={(e) => setLabel(e.target.value)}
+                            hidden
+                        />
+                        FEAT
+                    </label>
+                    <label htmlFor="docs" onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "docs" ? 'border-blue-300' : 'border-[#231F3B]'} rounded-lg `} >
+                        <input
+                            type="radio"
+                            id="docs"
+                            name="label"
+                            value={"docs"}
+                            onChange={(e) => setLabel(e.target.value)}
+                            hidden
+                        />
+                        DOCS
+                    </label>
                 </div>
+
             </div>
             <hr className="w-full h-px bg-[#1C192E]" />
         </div>

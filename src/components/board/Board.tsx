@@ -9,7 +9,8 @@ import { Card, Column } from '../../types';
 
 function Board() {
     const { data: columnData } = useColumns();
-    const { data: cardData } = useCards();
+    // const { data: cardData } = useCards();
+    const [cardData, setCardData] = useState<Card[] | null>(null);
     const { mutateAsync } = useUpdateCardList();
 
     const sensors = useSensors(
@@ -22,9 +23,9 @@ function Board() {
     const [activeCard, setActiveCard] = useState<Card | null>(null);
 
 
-    const getCardPos = (id: UniqueIdentifier) => cardData.findIndex((card: Card) => card.id === id);
+    const getCardPos = (id: UniqueIdentifier) => cardData?.findIndex((card: Card) => card.id === id);
 
-    const getOverColumnLastIdx = (overId: UniqueIdentifier) => cardData.findLastIndex((card: Card) => card.columnId === overId) + 1;
+    const getOverColumnLastIdx = (overId: UniqueIdentifier) => cardData?.findLastIndex((card: Card) => card.columnId === overId) + 1;
 
     function swapCol(cardData: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {
         return cardData.map((card: Card) => {
@@ -41,7 +42,7 @@ function Board() {
 
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
-        let newCardData: Card[] = cardData;
+        let newCardData: Card[] | null = cardData;
 
         if (!over || active.id === over?.id) return;
         console.log(`Dropped ${active.data.current?.order} over ${over.data.current?.order}`);
@@ -69,7 +70,7 @@ function Board() {
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-[#0B0A13]">
-            <Header />
+            <Header setCardData={setCardData} />
 
             <DndContext
                 sensors={sensors}

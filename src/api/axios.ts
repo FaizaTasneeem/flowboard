@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Card } from "../types";
+import { Card, cardsParamsType } from "../types";
 
 const columnsPath = `http://localhost:4000/columns`;
 const cardsPath = `http://localhost:4000/cards`;
@@ -9,8 +9,17 @@ export async function fetchColumns() {
     return data;
 }
 
-export async function fetchCards() {
-    const { data } = await axios.get(`${cardsPath}?_sort=order`);
+export async function fetchCards({ title, label }: cardsParamsType) {
+    if (!title && !label) {
+        const { data } = await axios.get(`${cardsPath}?_sort=order`);
+        return data;
+    }
+    if (label) {
+        const { data } = await axios.get(`${cardsPath}?_sort=order&label=${label}`);
+        console.log(data)
+        return data;
+    }
+    const { data } = await axios.get(`${cardsPath}?_sort=order&title=${title}&label=${label}`);
     return data;
 }
 
