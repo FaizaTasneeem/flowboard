@@ -23,9 +23,12 @@ function Board() {
     const [activeCard, setActiveCard] = useState<Card | null>(null);
 
 
-    const getCardPos = (id: UniqueIdentifier) => cardData?.findIndex((card: Card) => card.id === id);
+    const getCardPos = (id: UniqueIdentifier): number => cardData?.findIndex((card: Card) => card.id === id) ?? -1;
 
-    const getOverColumnLastIdx = (overId: UniqueIdentifier) => cardData?.findLastIndex((card: Card) => card.columnId === overId) + 1;
+    const getOverColumnLastIdx = (overId: UniqueIdentifier): number => {
+        if (!cardData) return -1;
+        return cardData.findLastIndex((card: Card) => card.columnId === overId) + 1;
+    };
 
     function swapCol(cardData: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {
         return cardData.map((card: Card) => {
@@ -42,16 +45,15 @@ function Board() {
 
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
-        let newCardData: Card[] | null = cardData;
 
-        if (!over || active.id === over?.id) return;
+        if (!cardData || !over || active.id === over.id) return;
         console.log(`Dropped ${active.data.current?.order} over ${over.data.current?.order}`);
 
-        let activeCardPos = getCardPos(active.id);
-        let overCardPos = getCardPos(over.id);
+        let activeCardPos: number = getCardPos(active.id);
+        let overCardPos: number = getCardPos(over.id);
 
         //updating column of active (draggable) card
-        newCardData = overCardPos === -1
+        const newCardData = overCardPos === -1
             ? swapCol(cardData, active.id, over.id)    //over.id => column id
             : swapCol(cardData, active.id, cardData[overCardPos].columnId);    //over.id => card id
 
@@ -63,6 +65,7 @@ function Board() {
         const updatedList = arrayMove(newCardData, activeCardPos, overCardPos).map(
             (card, index) => ({ ...card, order: index + 1 })
         );
+        setCardData(updatedList);
         mutateAsync(updatedList);
         setActiveCard(null);
     }
@@ -82,7 +85,7 @@ function Board() {
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
                             <div key={column.id} className='w-1/4'>
-                                <ColumnComponent column={column} cardData={cardData?.filter((card: Card) => card.columnId === column.id)} />
+                                <ColumnComponent column={column} cardData={cardData.filter((card: Card) => card.columnId === column.id)} />
                             </div>
                         ))
                     }

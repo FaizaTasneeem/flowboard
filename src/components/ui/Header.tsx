@@ -4,7 +4,7 @@ import { useCards } from "../../hooks/useBoardQueries";
 import Logo from "./Logo"
 import { Card } from "../../types";
 
-function Header({ setCardData }: { setCardData: (param: Card[]) => void }) {
+function Header({ setCardData }: { setCardData: (param: Card[] | null) => void }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const queryTitle = searchParams.get('q') || "";
     const queryLabel = searchParams.get('q') || "";
@@ -24,7 +24,7 @@ function Header({ setCardData }: { setCardData: (param: Card[]) => void }) {
     }, [title, label]);
 
     useEffect(() => {
-        if (cardsList?.length !== 0) setCardData(cardsList);
+        if (cardsList) setCardData(cardsList);
     }, [cardsList]);
 
     return (
@@ -42,10 +42,9 @@ function Header({ setCardData }: { setCardData: (param: Card[]) => void }) {
                 />
 
                 <div className="w-1/3 flex font-bold text-xs text-[#6E6894] gap-2">
-                    <label htmlFor="bug" onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "bug" ? 'border-red-300' : 'border-[#231F3B]'} rounded-lg `} >
+                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "bug" ? 'border-red-300' : 'border-[#231F3B]'} rounded-lg `} >
                         <input
                             type="radio"
-                            id="bug"
                             name="label"
                             value={"bug"}
                             onChange={(e) => setLabel(e.target.value)}
@@ -53,10 +52,9 @@ function Header({ setCardData }: { setCardData: (param: Card[]) => void }) {
                         />
                         BUG
                     </label>
-                    <label htmlFor="feat" onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "feat" ? 'border-green-300' : 'border-[#231F3B]'} rounded-lg `} >
+                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "feat" ? 'border-green-300' : 'border-[#231F3B]'} rounded-lg `} >
                         <input
                             type="radio"
-                            id="feat"
                             name="label"
                             value={"feat"}
                             onChange={(e) => setLabel(e.target.value)}
@@ -64,10 +62,9 @@ function Header({ setCardData }: { setCardData: (param: Card[]) => void }) {
                         />
                         FEAT
                     </label>
-                    <label htmlFor="docs" onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "docs" ? 'border-blue-300' : 'border-[#231F3B]'} rounded-lg `} >
+                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "docs" ? 'border-blue-300' : 'border-[#231F3B]'} rounded-lg `} >
                         <input
                             type="radio"
-                            id="docs"
                             name="label"
                             value={"docs"}
                             onChange={(e) => setLabel(e.target.value)}
