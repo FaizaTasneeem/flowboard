@@ -10,7 +10,7 @@ export async function fetchColumns() {
 }
 
 export async function fetchCards() {
-    const { data } = await axios.get(cardsPath);
+    const { data } = await axios.get(`${cardsPath}?_sort=order`);
     return data;
 }
 

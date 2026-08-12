@@ -59,7 +59,7 @@ function Board() {
 
     function handleDragStart(event: DragStartEvent) {
         const { active } = event;
-        if (active.id) console.log(`Started dragging ${active.id}`);
+        if (active.id) console.log(`Started dragging ${active.data.current?.order}`);
         if (active.data.current) setActiveCard(active.data.current as Card);
     }
 
@@ -68,7 +68,7 @@ function Board() {
         let newCardData: Card[] = cardData;
 
         if (!over || active.id === over?.id) return;
-        console.log(`Dropped ${active.id} over ${over.id}`);
+        console.log(`Dropped ${active.data.current?.order} over ${over.data.current?.order}`);
 
         let activeCardPos = getCardPos(active.id);
         let overCardPos = getCardPos(over.id);
