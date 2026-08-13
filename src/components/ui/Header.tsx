@@ -4,16 +4,13 @@ import { useCards } from "../../hooks/useBoardQueries";
 import Logo from "./Logo"
 import { Card } from "../../types";
 
-function Header({ setCardData }: { setCardData: (param: Card[] | null) => void }) {
+function Header({ cardData }: { cardData: Card[] }) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const queryTitle = searchParams.get('q') || "";
-    const queryLabel = searchParams.get('q') || "";
+    const queryTitle = searchParams.get('title') || "";
+    const queryLabel = searchParams.get('label') || "";
 
     const [title, setTitle] = useState(queryTitle);
     const [label, setLabel] = useState(queryLabel);
-
-
-    const { data: cardsList } = useCards(title, label);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -23,9 +20,6 @@ function Header({ setCardData }: { setCardData: (param: Card[] | null) => void }
         return () => clearTimeout(timer);
     }, [title, label]);
 
-    useEffect(() => {
-        if (cardsList) setCardData(cardsList);
-    }, [cardsList]);
 
     return (
         <div className="w-[75%] flex flex-col">

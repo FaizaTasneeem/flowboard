@@ -9,8 +9,7 @@ import { Card, Column } from '../../types';
 
 function Board() {
     const { data: columnData } = useColumns();
-    // const { data: cardData } = useCards();
-    const [cardData, setCardData] = useState<Card[] | null>(null);
+    const { data: cardData } = useCards();
     const { mutateAsync } = useUpdateCardList();
 
     const sensors = useSensors(
@@ -23,14 +22,11 @@ function Board() {
     const [activeCard, setActiveCard] = useState<Card | null>(null);
 
 
-    const getCardPos = (id: UniqueIdentifier): number => cardData?.findIndex((card: Card) => card.id === id) ?? -1;
+    const getCardPos = (id: UniqueIdentifier): number => cardData?.findIndex((card: Card) => card.id === id);
 
-    const getOverColumnLastIdx = (overId: UniqueIdentifier): number => {
-        if (!cardData) return -1;
-        return cardData.findLastIndex((card: Card) => card.columnId === overId) + 1;
-    };
+    const getOverColumnLastIdx = (overId: UniqueIdentifier): number => cardData?.findLastIndex((card: Card) => card.columnId === overId) + 1;
 
-    function swapCol(cardData: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {
+    function updateActiveCardCol(cardData: Card[], activeCardId: UniqueIdentifier, overColId: UniqueIdentifier) {
         return cardData.map((card: Card) => {
             if (card.id === activeCardId) return { ...card, columnId: overColId.toString() };
             return card;
@@ -54,8 +50,8 @@ function Board() {
 
         //updating column of active (draggable) card
         const newCardData = overCardPos === -1
-            ? swapCol(cardData, active.id, over.id)    //over.id => column id
-            : swapCol(cardData, active.id, cardData[overCardPos].columnId);    //over.id => card id
+            ? updateActiveCardCol(cardData, active.id, over.id)    //over.id => column id
+            : updateActiveCardCol(cardData, active.id, cardData[overCardPos].columnId);    //over.id => card id
 
         if (overCardPos === -1) overCardPos = getOverColumnLastIdx(over.id);
 
@@ -65,7 +61,6 @@ function Board() {
         const updatedList = arrayMove(newCardData, activeCardPos, overCardPos).map(
             (card, index) => ({ ...card, order: index + 1 })
         );
-        setCardData(updatedList);
         mutateAsync(updatedList);
         setActiveCard(null);
     }
@@ -73,7 +68,7 @@ function Board() {
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-[#0B0A13]">
-            <Header setCardData={setCardData} />
+            <Header cardData={cardData} />
 
             <DndContext
                 sensors={sensors}
@@ -85,7 +80,7 @@ function Board() {
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
                             <div key={column.id} className='w-1/4'>
-                                <ColumnComponent column={column} cardData={cardData.filter((card: Card) => card.columnId === column.id)} />
+                                <ColumnComponent column={column} cardData={cardData?.filter((card: Card) => card.columnId === column.id)} />
                             </div>
                         ))
                     }

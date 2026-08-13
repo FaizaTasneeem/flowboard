@@ -10,10 +10,10 @@ export const useColumns = () => {
     });
 };
 
-export const useCards = (title?: string, label?: string) => {
+export const useCards = () => {
     return useQuery({
-        queryKey: ['cards', title, label],
-        queryFn: () => fetchCards({ title, label })
+        queryKey: ['cards'],
+        queryFn: fetchCards
     });
 };
 
