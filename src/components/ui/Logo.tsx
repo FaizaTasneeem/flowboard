@@ -1,7 +1,7 @@
 
-function Logo() {
+function Logo({ setSearchParams }: { setSearchParams: (param: { title: string; label: string }) => void }) {
     return (
-        <div className="flex items-center gap-2.5 select-none">
+        <div className="flex items-center gap-2.5 select-none cursor-pointer" onClick={() => setSearchParams({ title: "", label: "" })}>
             {/* Purple Icon Box */}
             <div className="w-8 h-8 rounded-lg bg-[#815BF5] flex items-center justify-center shadow-sm">
                 <svg

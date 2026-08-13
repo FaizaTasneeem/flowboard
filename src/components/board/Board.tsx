@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from "react-router-dom"
 import { DndContext, DragStartEvent, DragEndEvent, DragOverlay, UniqueIdentifier, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useCards, useColumns, useUpdateCardList } from '../../hooks/useBoardQueries';
@@ -12,15 +13,27 @@ function Board() {
     const { data: cardData } = useCards();
     const { mutateAsync } = useUpdateCardList();
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const queryTitle = searchParams.get('title') || "";
+    const queryLabel = searchParams.get('label') || "";
+
+    const [activeCard, setActiveCard] = useState<Card | null>(null);
+    const [title, setTitle] = useState(queryTitle);
+    const [prevTitle, setPrevTitle] = useState(queryTitle);
+    const [label, setLabel] = useState(queryLabel);
+    const [prevLabel, setPrevLabel] = useState(queryLabel);
+
+
+    if (queryTitle !== prevTitle) { setPrevTitle(queryTitle); setTitle(queryTitle); };
+    if (queryLabel !== prevLabel) { setPrevLabel(queryLabel); setLabel(queryLabel); };
+
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates
         })
     );
-
-    const [activeCard, setActiveCard] = useState<Card | null>(null);
-
 
     const getCardPos = (id: UniqueIdentifier): number => cardData?.findIndex((card: Card) => card.id === id);
 
@@ -42,7 +55,7 @@ function Board() {
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
 
-        if (!cardData || !over || active.id === over.id) return;
+        if (!cardData || !over || active.id === over.id || queryTitle !== "" || queryLabel !== "") return;
         console.log(`Dropped ${active.data.current?.order} over ${over.data.current?.order}`);
 
         let activeCardPos: number = getCardPos(active.id);
@@ -61,14 +74,14 @@ function Board() {
         const updatedList = arrayMove(newCardData, activeCardPos, overCardPos).map(
             (card, index) => ({ ...card, order: index + 1 })
         );
-        mutateAsync(updatedList);
+        mutateAsync({ prevList: cardData, updatedList });
         setActiveCard(null);
     }
 
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-[#0B0A13]">
-            <Header cardData={cardData} />
+            <Header title={title} label={label} setSearchParams={setSearchParams} setTitle={setTitle} setLabel={setLabel} />
 
             <DndContext
                 sensors={sensors}
@@ -80,7 +93,14 @@ function Board() {
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
                             <div key={column.id} className='w-1/4'>
-                                <ColumnComponent column={column} cardData={cardData?.filter((card: Card) => card.columnId === column.id)} />
+                                <ColumnComponent
+                                    column={column}
+                                    cardData={cardData?.filter((card: Card) =>
+                                        card.columnId === column.id &&
+                                        (!queryTitle || card.title.toLocaleLowerCase().includes(queryTitle.toLocaleLowerCase())) &&
+                                        (!queryLabel || card.label.toLocaleLowerCase().includes(queryLabel.toLocaleLowerCase()))
+                                    )}
+                                />
                             </div>
                         ))
                     }

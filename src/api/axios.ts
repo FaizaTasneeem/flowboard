@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Card, cardsParamsType } from "../types";
+import { Card } from "../types";
 
 const columnsPath = `http://localhost:4000/columns`;
 const cardsPath = `http://localhost:4000/cards`;
@@ -29,7 +29,11 @@ export async function deleteCard(id: string) {
     return data;
 }
 
-export async function updateCardList(updatedList: Card[]) {
-    const newListRequests = updatedList.map(card => editCard({ id: card.id, card }));
+export async function updateCardList({ prevList, updatedList }: { prevList: Card[], updatedList: Card[] }) {
+    const filteredList = updatedList.filter(updatedCard => {
+        const filteredCard = prevList.find(prevCard => updatedCard.id === prevCard.id);
+        return filteredCard?.columnId !== updatedCard.columnId || filteredCard?.order !== updatedCard.order;
+    });
+    const newListRequests = filteredList.map(card => editCard({ id: card.id, card }));
     return Promise.all(newListRequests);
 }

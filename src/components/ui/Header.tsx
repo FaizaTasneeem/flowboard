@@ -1,17 +1,15 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom"
-import { useCards } from "../../hooks/useBoardQueries";
+import { useEffect } from "react";
 import Logo from "./Logo"
-import { Card } from "../../types";
 
-function Header({ cardData }: { cardData: Card[] }) {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const queryTitle = searchParams.get('title') || "";
-    const queryLabel = searchParams.get('label') || "";
+type HeaderParams = {
+    title: string,
+    label: string,
+    setSearchParams: (param: { title: string; label: string }) => void,
+    setTitle: (param: string) => void,
+    setLabel: (param: string) => void,
+}
 
-    const [title, setTitle] = useState(queryTitle);
-    const [label, setLabel] = useState(queryLabel);
-
+function Header({ title, label, setSearchParams, setTitle, setLabel }: HeaderParams) {
     useEffect(() => {
         const timer = setTimeout(() => {
             setSearchParams({ title, label });
@@ -24,7 +22,7 @@ function Header({ cardData }: { cardData: Card[] }) {
     return (
         <div className="w-[75%] flex flex-col">
             <div className="flex p-4 px-10 gap-8">
-                <Logo />
+                <Logo setSearchParams={setSearchParams} />
                 <hr className="w-px h-8 bg-[#1C192E]" />
 
                 <input
@@ -66,6 +64,15 @@ function Header({ cardData }: { cardData: Card[] }) {
                         />
                         DOCS
                     </label>
+
+                    <button
+                        name="clr-btn"
+                        className={`cursor-pointer p-2 px-4 border border-[#231F3B] ${label !== "" || title !== "" ? '' : 'hidden'} rounded-lg `}
+                        onClick={() => setSearchParams({ title: "", label: "" })}
+                    >
+                        Clear
+                    </button>
+
                 </div>
 
             </div>

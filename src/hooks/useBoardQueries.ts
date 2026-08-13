@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchColumns, fetchCards, updateCardList } from '../api/axios';
-import { Card, cardsParamsType } from '../types';
+import { Card } from '../types';
 
 
 export const useColumns = () => {
@@ -22,10 +22,10 @@ export const useUpdateCardList = () => {
 
     return useMutation({
         mutationFn: updateCardList,
-        onMutate: async (cardList: Card[]) => {
+        onMutate: async ({ prevList, updatedList }: { prevList: Card[], updatedList: Card[] }) => {
             await queryClient.cancelQueries({ queryKey: ['cards'] });
             const previous: Card[] | undefined = queryClient.getQueryData(['cards']);
-            queryClient.setQueryData(['cards'], cardList);
+            queryClient.setQueryData(['cards'], updatedList);
             return { previous };
         },
         onError: (_err, _var, context) => queryClient.setQueryData(['cards'], context?.previous),
