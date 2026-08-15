@@ -7,10 +7,11 @@ import Header from '../ui/Header'
 import ColumnComponent from './ColumnComponent';
 import CardElem from './CardView';
 import { Card, Column } from '../../types';
+import BoardSkeleton from './BoardSkeleton';
 
 function Board() {
-    const { data: columnData } = useColumns();
-    const { data: cardData } = useCards();
+    const { data: columnData, isLoading: isColLoading, isError: isColError, error: colError } = useColumns();
+    const { data: cardData, isLoading: isCardLoading, isError: isCardError, error: cardError } = useCards();
     const { mutateAsync } = useUpdateCardList();
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -89,6 +90,14 @@ function Board() {
                 onDragEnd={handleDragEnd}
             >
                 <div className="w-full py-4 px-10 flex gap-4">
+                    {isColLoading && <BoardSkeleton />}
+
+                    {isColError && (
+                        <div className='p-10 flex flex-col justify-start items-start text-red-300'>
+                            Error occured during fetching: {colError.message}
+                        </div>
+                    )}
+
                     {cardData && columnData?.slice()
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (

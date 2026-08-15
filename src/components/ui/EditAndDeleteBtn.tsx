@@ -1,16 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil, X } from "lucide-react";
-import { deleteCard } from "../../api/axios";
 import { Card } from "../../types"
+import { useDeleteCard } from "../../hooks/useBoardQueries";
 
 
 function EditAndDeleteBtn({ showCardEditAndDeleteBtn, setShowEditForm, card }: { showCardEditAndDeleteBtn: string, setShowEditForm: (show: string) => void, card: Card }) {
-  const queryClient = useQueryClient();
-
-  const { mutateAsync: del } = useMutation({
-    mutationFn: deleteCard,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cards'] })
-  })
+  const { mutateAsync: del } = useDeleteCard();
 
   return (
     <div className="flex gap-1">
