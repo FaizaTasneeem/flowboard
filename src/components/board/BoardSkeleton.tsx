@@ -2,8 +2,8 @@ function BoardSkeleton() {
     const skeletons = Array.from({ length: 4 });
     return (
         <>
-            {skeletons && skeletons.map((col) => (
-                <div className="w-1/4 p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
+            {skeletons && skeletons.map((col, clidx) => (
+                <div key={clidx} className="w-full sm:w-1/4 p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
                     <div className="flex flex-col animate-pulse">
                         <span className="p-2 flex justify-between items-center font-bold text-sm text-white">
                             <div className="flex gap-2 items-center">
@@ -15,8 +15,8 @@ function BoardSkeleton() {
                         <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
 
                         <div className="p-2 flex flex-col gap-2 text-[#E2E8F0]">
-                            {skeletons?.map((card, idx) =>
-                                <div className="w-full p-4 border border-[#2A2A45] rounded-lg animate-pulse"></div>
+                            {skeletons?.map((card, cdidx) =>
+                                <div key={cdidx} className="w-full p-4 border border-[#2A2A45] rounded-lg animate-pulse"></div>
                             )}
                             <button className="mt-4 p-4 border border-dashed border-[#221E38] rounded-lg animate-pulse"></button>
                         </div>

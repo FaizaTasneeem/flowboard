@@ -83,13 +83,14 @@ function Board() {
     return (
         <div className="w-full min-h-screen flex flex-col bg-[#0B0A13]">
             <Header title={title} label={label} setSearchParams={setSearchParams} setTitle={setTitle} setLabel={setLabel} />
+            <hr className="w-full h-px bg-[#1C192E]" />
 
             <DndContext
                 sensors={sensors}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
-                <div className="w-full py-4 px-10 flex gap-4">
+                <div className="w-full py-4 px-10 flex gap-4 flex-wrap sm:flex-nowrap">
                     {isColLoading && <BoardSkeleton />}
 
                     {isColError && (
@@ -101,7 +102,7 @@ function Board() {
                     {cardData && columnData?.slice()
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
-                            <div key={column.id} className='w-1/4'>
+                            <div key={column.id} className='w-full sm:w-1/4'>
                                 <ColumnComponent
                                     column={column}
                                     cardData={cardData?.filter((card: Card) =>

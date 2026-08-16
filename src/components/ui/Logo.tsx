@@ -2,7 +2,6 @@
 function Logo({ setSearchParams }: { setSearchParams: (param: { title: string; label: string }) => void }) {
     return (
         <div className="flex items-center gap-2.5 select-none cursor-pointer" onClick={() => setSearchParams({ title: "", label: "" })}>
-            {/* Purple Icon Box */}
             <div className="w-8 h-8 rounded-lg bg-[#815BF5] flex items-center justify-center shadow-sm">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -20,10 +19,13 @@ function Logo({ setSearchParams }: { setSearchParams: (param: { title: string; l
                 </svg>
             </div>
 
-            <span className="font-bold font-sans text-white">
+            <span className="font-bold font-sans text-white hidden lg:block">
                 Flow
                 <span className="text-[#7C5CFC]">Board</span>
             </span>
+
+            <hr className="w-px h-8 bg-[#1C192E] shrink-0" />
+
         </div>
     )
 }

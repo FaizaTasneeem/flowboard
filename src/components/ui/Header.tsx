@@ -23,18 +23,17 @@ function Header({ title, label, setSearchParams, setTitle, setLabel }: HeaderPar
         <div className="w-[75%] flex flex-col">
             <div className="flex p-4 px-10 gap-8">
                 <Logo setSearchParams={setSearchParams} />
-                <hr className="w-px h-8 bg-[#1C192E]" />
 
                 <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-2/3 p-2 border border-[#231F3B] rounded-lg bg-[#141223] font-normal text-sm placeholder-[#5D577D] focus:outline focus:outline-purple-800 text-[#6E6894]"
+                    className="w-10 sm:w-2/3 p-2 border border-[#231F3B] rounded-lg bg-[#141223] font-normal text-sm placeholder-[#5D577D] focus:outline focus:outline-purple-800 text-[#6E6894]"
                     placeholder="🔍 Filter cards..."
                 />
 
                 <div className="w-1/3 flex font-bold text-xs text-[#6E6894] gap-2">
-                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "bug" ? 'border-red-300' : 'border-[#231F3B]'} rounded-lg `} >
+                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 sm:px-4 border ${label === "bug" ? 'border-red-300' : 'border-[#231F3B]'} rounded-lg `} >
                         <input
                             type="radio"
                             name="label"
@@ -44,7 +43,7 @@ function Header({ title, label, setSearchParams, setTitle, setLabel }: HeaderPar
                         />
                         BUG
                     </label>
-                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "feat" ? 'border-green-300' : 'border-[#231F3B]'} rounded-lg `} >
+                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 sm:px-4 border ${label === "feat" ? 'border-green-300' : 'border-[#231F3B]'} rounded-lg `} >
                         <input
                             type="radio"
                             name="label"
@@ -54,7 +53,7 @@ function Header({ title, label, setSearchParams, setTitle, setLabel }: HeaderPar
                         />
                         FEAT
                     </label>
-                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 px-4 border ${label === "docs" ? 'border-blue-300' : 'border-[#231F3B]'} rounded-lg `} >
+                    <label onPointerDown={(e) => e.stopPropagation()} className={`cursor-pointer p-2 sm:px-4 border ${label === "docs" ? 'border-blue-300' : 'border-[#231F3B]'} rounded-lg `} >
                         <input
                             type="radio"
                             name="label"
@@ -76,7 +75,6 @@ function Header({ title, label, setSearchParams, setTitle, setLabel }: HeaderPar
                 </div>
 
             </div>
-            <hr className="w-full h-px bg-[#1C192E]" />
         </div>
     )
 }
