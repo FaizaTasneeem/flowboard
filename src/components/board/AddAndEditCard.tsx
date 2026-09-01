@@ -28,7 +28,7 @@ function AddAndEditCard({ setShowAddCardForm, column, card, cardOrder }: { setSh
         let newCard = { ...formValues, columnId: column.id, order: cardOrder }
 
         console.log(newCard);
-        card.id !== "" ? edit({ id: card.id, card: newCard }) : add(newCard);
+        card.id !== "" ? edit({ id: card.id, card: newCard }) : add({ ...newCard, id: Date.now().toString() });
         setShowAddCardForm(false);
     }
 

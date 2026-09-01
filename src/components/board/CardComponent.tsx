@@ -8,7 +8,7 @@ import CardElem from "./CardView";
 
 function CardComponent({ card, column, idx }: { card: Card, column: Column, idx: number }) {
     const [showCardEditAndDeleteBtn, setShowCardEditAndDeleteBtn] = useState("");
-    const [showEditForm, setShowEditForm] = useState("");
+    const [showEditForm, setShowEditForm] = useState<string | null>(null);
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: card.id, data: card });
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -37,7 +37,7 @@ function CardComponent({ card, column, idx }: { card: Card, column: Column, idx:
 
             {showEditForm === card.id &&
                 <AddAndEditCard
-                    setShowAddCardForm={() => setShowEditForm("")}
+                    setShowAddCardForm={() => setShowEditForm(null)}
                     column={column}
                     card={card}
                     cardOrder={idx}

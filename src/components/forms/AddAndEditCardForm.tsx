@@ -61,7 +61,7 @@ function AddAndEditCardForm({ formValues, handleSubmit, handleFormChange, setSho
             <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
 
             <div className="mt-2 text-xs text-[#6E6894] flex justify-end gap-2">
-                <button className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-lg" onPointerDown={(e) => e.stopPropagation()} onClick={() => setShowAddCardForm(false)}>Cancel</button>
+                <button className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-lg" onPointerDown={(e) => e.stopPropagation()} onClick={() => setShowAddCardForm(false)} type="button">Cancel</button>
                 <button className="cursor-pointer p-2 px-4 border border-[#231F3B] rounded-lg" onPointerDown={(e) => e.stopPropagation()} type="submit">Save</button>
             </div>
 
