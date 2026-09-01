@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { env } from "./config/env";
-import columnRoutes from "./routes/columnRoutes";
-import cardRoutes from "./routes/cardRoutes";
+import { env } from "./config/env.js";
+import columnRoutes from "./routes/columnRoutes.js";
+import cardRoutes from "./routes/cardRoutes.js";
 
 const app = express();
 

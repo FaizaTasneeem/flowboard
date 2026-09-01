@@ -1,7 +1,7 @@
 import express from "express";
 import { eq } from "drizzle-orm";
-import { db } from "../../src/db/index";
-import { cards } from "../../src/db/schema";
+import { db } from "../../src/db/index.js";
+import { cards } from "../../src/db/schema.js";
 
 const router = express.Router();
 
