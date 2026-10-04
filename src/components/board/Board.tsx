@@ -8,6 +8,7 @@ import ColumnComponent from './ColumnComponent';
 import CardElem from './CardView';
 import { Card, Column } from '../../types';
 import BoardSkeleton from './BoardSkeleton';
+import AddColumn from './AddColumn';
 
 function Board() {
     const { data: columnData, isLoading: isColLoading, isError: isColError, error: colError } = useColumns();
@@ -90,7 +91,7 @@ function Board() {
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
-                <div className="w-full py-4 px-10 flex gap-4 flex-wrap sm:flex-nowrap">
+                <div className="w-full py-4 px-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {isColLoading && <BoardSkeleton />}
 
                     {isColError && (
@@ -102,7 +103,7 @@ function Board() {
                     {cardData && columnData?.slice()
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
-                            <div key={column.id} className='w-full sm:w-1/4'>
+                            <div key={column.id} className='w-full'>
                                 <ColumnComponent
                                     column={column}
                                     cardData={cardData?.filter((card: Card) =>
@@ -114,6 +115,8 @@ function Board() {
                             </div>
                         ))
                     }
+
+                    <AddColumn />
                 </div>
 
                 <DragOverlay dropAnimation={null}>

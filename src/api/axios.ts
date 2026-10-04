@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Card } from "../types";
+import { Card, Column } from "../types";
 
 const columnsPath = import.meta.env.VITE_COLUMNS_BACKEND_PATH || `http://localhost:5000/api/columns`;
 const cardsPath = import.meta.env.VITE_CARDS_BACKEND_PATH || `http://localhost:5000/api/cards`;
@@ -11,6 +11,11 @@ export async function fetchColumns() {
 
 export async function fetchCards() {
     const { data } = await axios.get(cardsPath);
+    return data;
+}
+
+export async function addColumn(column: Column) {
+    const { data } = await axios.post(`${cardsPath}/create`, column);
     return data;
 }
 
