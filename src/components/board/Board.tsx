@@ -116,7 +116,7 @@ function Board() {
                         ))
                     }
 
-                    <AddColumn />
+                    {!isColLoading && !isColError && <AddColumn />}
                 </div>
 
                 <DragOverlay dropAnimation={null}>

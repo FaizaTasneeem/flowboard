@@ -3,7 +3,7 @@ function BoardSkeleton() {
     return (
         <>
             {skeletons && skeletons.map((col, clidx) => (
-                <div key={clidx} className="w-full sm:w-1/4 p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
+                <div key={clidx} className="w-full p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
                     <div className="flex flex-col animate-pulse">
                         <span className="p-2 flex justify-between items-center font-bold text-sm text-white">
                             <div className="flex gap-2 items-center">
