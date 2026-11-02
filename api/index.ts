@@ -3,6 +3,7 @@ import cors from "cors";
 import { env } from "./config/env.js";
 import columnRoutes from "./routes/columnRoutes.js";
 import cardRoutes from "./routes/cardRoutes.js";
+import healthCheckRoutes from "./routes/healthCheckRoutes.js";
 
 const app = express();
 
@@ -14,5 +15,6 @@ app.use(cors({
 
 app.use("/api/columns", columnRoutes);
 app.use("/api/cards", cardRoutes);
+app.use('/api/health', healthCheckRoutes);
 
 export default app;
