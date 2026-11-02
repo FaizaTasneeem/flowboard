@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import EditAndDeleteBtn from "../ui/EditAndDeleteBtn";
+import EditAndDeleteCardBtn from "../ui/EditAndDeleteCardBtn";
 import AddAndEditCard from "./AddAndEditCard";
 import { Card, Column } from "../../types";
 import CardElem from "./CardView";
@@ -31,7 +31,7 @@ function CardComponent({ card, column, idx }: { card: Card, column: Column, idx:
                     onMouseLeave={() => setShowCardEditAndDeleteBtn("")}
                 >
                     <CardElem card={card} />
-                    <EditAndDeleteBtn showCardEditAndDeleteBtn={showCardEditAndDeleteBtn} setShowEditForm={setShowEditForm} card={card} />
+                    <EditAndDeleteCardBtn showCardEditAndDeleteBtn={showCardEditAndDeleteBtn} setShowEditForm={setShowEditForm} card={card} />
                 </div>
             }
 

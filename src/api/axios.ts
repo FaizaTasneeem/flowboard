@@ -29,6 +29,11 @@ export async function editCard({ id, card }: { id: string, card: Card }) {
     return data;
 }
 
+export async function deleteColumn(id: string) {
+    const { data } = await axios.delete(`${columnsPath}/delete/${id}`)
+    return data;
+}
+
 export async function deleteCard(id: string) {
     const { data } = await axios.delete(`${cardsPath}/delete/${id}`)
     return data;

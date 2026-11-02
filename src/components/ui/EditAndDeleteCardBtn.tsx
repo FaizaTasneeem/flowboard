@@ -3,7 +3,7 @@ import { Card } from "../../types"
 import { useDeleteCard } from "../../hooks/useBoardQueries";
 
 
-function EditAndDeleteBtn({ showCardEditAndDeleteBtn, setShowEditForm, card }: { showCardEditAndDeleteBtn: string, setShowEditForm: (show: string) => void, card: Card }) {
+function EditAndDeleteBtnCard({ showCardEditAndDeleteBtn, setShowEditForm, card }: { showCardEditAndDeleteBtn: string, setShowEditForm: (show: string) => void, card: Card }) {
   const { mutateAsync: del } = useDeleteCard();
 
   return (
@@ -26,4 +26,4 @@ function EditAndDeleteBtn({ showCardEditAndDeleteBtn, setShowEditForm, card }: {
   )
 }
 
-export default EditAndDeleteBtn
+export default EditAndDeleteBtnCard

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { fetchColumns, addColumn, fetchCards, updateCardList, addCard, editCard, deleteCard } from '../api/axios';
+import { fetchColumns, addColumn, fetchCards, updateCardList, addCard, editCard, deleteCard, deleteColumn } from '../api/axios';
 import { Card } from '../types';
 
 
@@ -17,7 +17,19 @@ export const useAddColumn = () => {
         mutationFn: addColumn,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['columns'] })
     });
-}
+};
+
+export const useDeleteColumn = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: deleteColumn,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['columns'] });
+            queryClient.invalidateQueries({ queryKey: ['cards'] });
+        }
+    })
+};
 
 export const useCards = () => {
     return useQuery({

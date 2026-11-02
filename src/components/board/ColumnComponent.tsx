@@ -4,15 +4,22 @@ import { SortableContext } from "@dnd-kit/sortable";
 import CardComponent from "./CardComponent";
 import AddAndEditCard from "./AddAndEditCard";
 import { Column, Card } from "../../types"
+import DeleteColumnBtn from "../ui/DeleteColumnBtn";
 
 function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[] }) {
     const [showAddCardForm, setShowAddCardForm] = useState(false);
+    const [showColDelBtn, setColDelBtn] = useState<string | null>(null);
     const { setNodeRef } = useDroppable({ id: column.id });
 
     const sortedCards = cardData.slice().sort((a, b) => a.order - b.order);
     // const sortedCards = cardData;
     return (
-        <div ref={setNodeRef} className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg">
+        <div
+            ref={setNodeRef}
+            className="p-2 bg-[#100E1D] border border-[#231F3B] rounded-lg"
+            onMouseEnter={() => { setColDelBtn(column.id) }}
+            onMouseLeave={() => { setColDelBtn(null) }}
+        >
             <div className="flex flex-col">
                 <span className="p-2 flex justify-between items-center font-bold text-sm text-white">
                     <div className="flex gap-2 items-center">
@@ -25,7 +32,10 @@ function ColumnComponent({ column, cardData }: { column: Column, cardData: Card[
                         </div>
                         {column.title}
                     </div>
-                    <span className="p-3 w-2.5 h-2.5 rounded-full text-xs font-normal flex justify-center items-center bg-[#18182C]">{cardData.length}</span>
+                    <div className="flex items-center gap-2">
+                        {showColDelBtn && <DeleteColumnBtn colId={column.id} />}
+                        <span className="p-3 w-2.5 h-2.5 rounded-full text-xs font-normal flex justify-center items-center bg-[#18182C]">{cardData.length}</span>
+                    </div>
                 </span>
                 <hr className="mt-2 w-full h-px border-none bg-[#1C192E]" />
 
