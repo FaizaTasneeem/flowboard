@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from "react-router-dom"
 import { DndContext, DragStartEvent, DragEndEvent, DragOverlay, UniqueIdentifier, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -25,7 +25,7 @@ function Board() {
     const [prevTitle, setPrevTitle] = useState(queryTitle);
     const [label, setLabel] = useState(queryLabel);
     const [prevLabel, setPrevLabel] = useState(queryLabel);
-
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     if (queryTitle !== prevTitle) { setPrevTitle(queryTitle); setTitle(queryTitle); };
     if (queryLabel !== prevLabel) { setPrevLabel(queryLabel); setLabel(queryLabel); };
@@ -80,6 +80,18 @@ function Board() {
         setActiveCard(null);
     }
 
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const onWheel = (e: WheelEvent) => {
+            if (e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+            e.preventDefault();
+            el.scrollLeft += e.deltaY;
+        };
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
+    }, []);
+
 
     return (
         <div className="w-full h-screen flex flex-col bg-[#0B0A13] ">
@@ -91,7 +103,7 @@ function Board() {
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
-                <div className="w-full h-full py-4 px-10 flex flex-row items-start gap-4 overflow-x-auto">
+                <div ref={scrollRef} className="w-full h-full py-4 px-10 flex flex-row items-start gap-4 overflow-x-auto">
                     {isColLoading && <BoardSkeleton />}
 
                     {isColError && (
