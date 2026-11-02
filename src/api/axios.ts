@@ -15,7 +15,7 @@ export async function fetchCards() {
 }
 
 export async function addColumn(column: Column) {
-    const { data } = await axios.post(`${cardsPath}/create`, column);
+    const { data } = await axios.post(`${columnsPath}/create`, column);
     return data;
 }
 

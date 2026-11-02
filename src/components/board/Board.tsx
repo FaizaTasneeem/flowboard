@@ -82,7 +82,7 @@ function Board() {
 
 
     return (
-        <div className="w-full min-h-screen flex flex-col bg-[#0B0A13]">
+        <div className="w-full h-screen flex flex-col bg-[#0B0A13] ">
             <Header title={title} label={label} setSearchParams={setSearchParams} setTitle={setTitle} setLabel={setLabel} />
             <hr className="w-full h-px bg-[#1C192E]" />
 
@@ -91,7 +91,7 @@ function Board() {
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
-                <div className="w-full py-4 px-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="w-full h-full py-4 px-10 flex flex-row items-start gap-4 overflow-x-auto">
                     {isColLoading && <BoardSkeleton />}
 
                     {isColError && (
@@ -103,7 +103,7 @@ function Board() {
                     {cardData && columnData?.slice()
                         .sort((a: Column, b: Column) => a.order - b.order)
                         .map((column: Column) => (
-                            <div key={column.id} className='w-full'>
+                            <div key={column.id} className='w-96 shrink-0'>
                                 <ColumnComponent
                                     column={column}
                                     cardData={cardData?.filter((card: Card) =>
@@ -116,7 +116,7 @@ function Board() {
                         ))
                     }
 
-                    {!isColLoading && !isColError && <AddColumn />}
+                    {!isColLoading && !isColError && <AddColumn colOrder={columnData?.length || 0} />}
                 </div>
 
                 <DragOverlay dropAnimation={null}>

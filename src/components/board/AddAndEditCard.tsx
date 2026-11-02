@@ -23,13 +23,17 @@ function AddAndEditCard({ setShowAddCardForm, column, card, cardOrder }: { setSh
 
     async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
-        // const formData: any = new FormData(event.currentTarget);
-        // let newCard = (Object as any).fromEntries(formData);
-        let newCard = { ...formValues, columnId: column.id, order: cardOrder }
+        try {
+            let newCard = { ...formValues, columnId: column.id, order: cardOrder }
 
-        console.log(newCard);
-        card.id !== "" ? edit({ id: card.id, card: newCard }) : add({ ...newCard, id: Date.now().toString() });
-        setShowAddCardForm(false);
+            card.id !== ""
+                ? await edit({ id: card.id, card: newCard })
+                : await add({ ...newCard, id: Date.now().toString() });
+            setShowAddCardForm(false);
+        }
+        catch (error) {
+            console.error("Failed to save card:", error);
+        }
     }
 
 

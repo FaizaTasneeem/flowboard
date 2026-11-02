@@ -8,3 +8,21 @@ body,
   margin: 0;
   padding: 0;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* ::-webkit-scrollbar-track {
+    background: #111720;
+} */
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(164, 205, 237, 0.349);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #3a4b63;
+}
