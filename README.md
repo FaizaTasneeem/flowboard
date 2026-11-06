@@ -10,7 +10,7 @@
 [![React Router](https://img.shields.io/badge/React_Router-v7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)](https://reactrouter.com/)
 [![Vite](https://img.shields.io/badge/Vite-v8-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-FlowBoard is a modern, accessible, high-performance Kanban board built with **React 19**, **TypeScript**, **Express.js**, **Drizzle ORM + PostgreSQL**, **dnd-kit**, and **TanStack Query v5**. It supports smooth drag-and-drop card reordering within and across columns, URL-based state filtering, full card CRUD operations, optimistic UI updates with automatic rollback on network failure, and full keyboard accessibility.
+FlowBoard is a modern, accessible, high-performance Kanban board built with **React 19**, **TypeScript**, **Express.js**, **Drizzle ORM + PostgreSQL**, **dnd-kit**, and **TanStack Query v5**. It supports smooth drag-and-drop card reordering within and across columns, URL-based state filtering, full column & card CRUD operations, optimistic UI updates with automatic rollback on network failure, and full keyboard accessibility.
 
 🚀 **Ready for Portfolio / CV Showcase**
 
@@ -24,7 +24,7 @@ FlowBoard is a modern, accessible, high-performance Kanban board built with **Re
 
 - 🖱️ **Accessible Drag-and-Drop**: Built using `@dnd-kit/core` and `@dnd-kit/sortable` supporting both **mouse** and **keyboard** navigation.
 - ⚡ **Optimistic Updates & Instant Rollback**: Reordering cards immediately reflects in the UI. If the server update fails (e.g. backend offline), TanStack Query instantly rolls back state without duplicating or losing cards.
-- 📝 **Card Management (CRUD)**: Create new cards, edit existing titles and color-coded labels, and delete cards with instant UI updates via server actions.
+- 📝 **Board & Card Management (CRUD)**: Create custom columns, delete non-default columns with cascade card deletion, create new cards, edit titles and labels, and delete cards with instant UI updates via server actions.
 - 🗄️ **Relational PostgreSQL Storage**: Columns and cards are persisted in a PostgreSQL database managed via **Drizzle ORM** with cascade constraints.
 - 🌐 **Express.js REST API Backend**: Node.js Express API handling RESTful routes (`/api/columns`, `/api/cards`) with CORS support and environment configuration.
 - 🔍 **URL-Driven Search & Filtering**: Text (`title`) and tag (`label`) filters sync dynamically with URL parameters (`useSearchParams`). Shared URLs retain exact search states across refreshes and browser history navigation.
@@ -66,6 +66,7 @@ flowboard/
 │   ├── components/
 │   │   ├── board/
 │   │   │   ├── AddAndEditCard.tsx    # Card trigger & dialog wrapper
+│   │   │   ├── AddColumn.tsx         # Column creation component
 │   │   │   ├── Board.tsx             # Main Kanban board container & dnd-kit context
 │   │   │   ├── BoardSkeleton.tsx     # Skeleton loading state
 │   │   │   ├── CardComponent.tsx     # Draggable card item
@@ -73,7 +74,8 @@ flowboard/
 │   │   ├── forms/
 │   │   │   └── AddAndEditCardForm.tsx # Card creation & editing modal form
 │   │   └── ui/
-│   │       ├── EditAndDeleteBtn.tsx  # Card action dropdown buttons
+│   │       ├── DeleteColumnBtn.tsx   # Column deletion button
+│   │       ├── EditAndDeleteCardBtn.tsx # Card action dropdown buttons
 │   │       ├── Header.tsx            # Header search & filter toolbar
 │   │       └── Logo.tsx              # Brand logo
 │   ├── db/
